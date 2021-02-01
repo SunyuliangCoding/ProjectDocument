@@ -1,0 +1,63 @@
+NavViewUML
+@startuml NavViewUML
+
+HomeController*--CommonWiKiConfigProvider:1
+PageComeController*--CommonWiKiConfigProvider:1
+
+CommonWiKiConfigProvider o--NavViewHandler
+
+MultiPageHandler<|--IMenuPageHandler
+NusionPageHanlder<|--IMenuPageHandler
+
+
+IMenuPageHandler*--NavViewInfo
+
+NavViewHandler *--IMenuPageHandler:0..*
+
+
+NavViewInfo*--NavViewItem
+
+
+class HomeController{}
+class PageComeController{}
+
+
+class CommonWiKiConfigProvider{
++string NavViewInfo
++void HandleNavView()    
+}
+
+class NavViewInfo{
++List<NavViewItem> NavViewItemList
++Guid MenuId
++int DisplayMode
++string OpenMode
+
+}
+
+class NavViewItem{
++string Title
++string PageCode
++int PageVersion
++int PageType
++string Url
+}
+class NavViewHandler{
++List<IMenuPageHandler> PageHandler
++GetPagesForPermission()
++HandlePage()
+}
+
+
+
+interface  IMenuPageHandler{
++List<NavViewInfoItem> GetPageInfo()
++List<NavViewInfoItem> CurrentFilter()
+}
+
+
+
+class MultiPageHandler{}
+class NusionPageHanlder{}
+
+@enduml

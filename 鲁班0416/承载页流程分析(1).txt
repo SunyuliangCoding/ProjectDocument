@@ -1,0 +1,59 @@
+承载页流程分析
+BeisenCloudFrontConfig 根据KeyName查询对应的配置文件，没获取到KeyName 走BeisenCloudCore前端资源文件
+
+问题：
+1.多个鲁班页面组成一个视图菜单，pageInstance 怎么返回给前端，原来是使用承载页
+2.前端编辑态如何支持  实施态部分元数据可以编辑，
+
+多租赁视图页地址：https://cloud.italent.link/ISVTestTK204/#/IndexPage?metaObjName=ISVTestTK204.moumoushiti1&app=ISVTestTK204&navViewMenuID=ec3bd328-a299-496d-9d9d-dc50b8d34f3b&navType=2&navCode=ec3bd328-a299-496d-9d9d-dc50b8d34f3b&navVersion=1611931425987&shadow_context={appModel:%22italent%22,uppid:%22%22}&_k=i9mbjb
+
+https://cloud.italent.link/PageHome/Index?product=OldAppForSteppe1&keyName=Nusion&pageCode=zhytestluban&appCode=OldAppForSteppe1&shadow_context={appModel:"italent",uppid:""}#/viewDynamic?t=t
+
+权限：
+三个方向思考
+1.组件的应用级别权限控制
+2.实体体系下的权限控制
+3.业务模型自身的开发态、实施态控制逻辑
+
+3.1 
+组配的元数据控制，https://wiki.beisen-inc.com/pages/viewpage.action?pageId=228327914
+核心思路是数据库全局的Check表，多个字段定位到元素，前端渲染的时候直接过滤、置灰定位的区域，部分数据有后端check，因为层级太深，代码侵入性太强
+鲁班的解决方案：
+1.组件内部自己控制，jsonPath, 但是引擎是主子表的处理方式
+
+
+
+权限的Schema设计
+问题1：
+https://wiki.beisen-inc.com/pages/viewpage.action?pageId=247365660
+架构设计中的Schema设计，是在Schema中存储权限的类型和维度，但是Schema的数据只在引擎感知
+
+问题2：
+如何判定唯一性：
+权限信息里面，要有注册权限的业务模型的Schema和鉴权字段，还有鉴权字段的值
+问题3：
+目前权限的维度有  类型、维度、元数据控制，哪些是实例化后有的属性，哪些是Schema的时候就确定的属性
+类型  buttoon、page是Scheam的时候确定，维度 application、profile 是Schema的时候确定
+元数据控制  一定是实例化以后才能确定
+
+
+
+1.ApplicationMenuItem 表添加字段  NavViewNameKinds   2,5
+2.Tab结构
+        BSGlobal.pageBuilderErrorMsg = 
+        [
+    {
+        "Title": "鲁班页面",
+        "PageCode": "NusionPage",
+        "Icon": "",
+        "PageType":"Nusion",
+        "Url": "/PageHome/Index?product={app}&keyName=Nusion&pageCode={pagecode}&appCode={app}&menuId={menuID}&shadow_context={appModel:\"italent\",uppid:\"\"}"
+    },
+    {
+        "Title": "多租赁页面",
+        "PageCode": "ISVTestTK204.page1",
+        "Icon": "",
+        "PageType":"MultiNavView",
+        "Url": "/ISVTestTK204/#/IndexPage?metaObjName={metaObjeName}&app={app}&navViewMenuID={menuId}&navType=2&navCode={menuId}&shadow_context={appModel:\"italent\",uppid:\"\"}"
+    }
+]

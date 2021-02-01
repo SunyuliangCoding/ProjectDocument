@@ -1,0 +1,22 @@
+承载页流程分析
+BeisenCloudFrontConfig 根据KeyName查询对应的配置文件，没获取到KeyName 走BeisenCloudCore前端资源文件
+
+问题：
+1.多个鲁班页面组成一个视图菜单，pageInstance 怎么返回给前端，原来是使用承载页
+2.前端编辑态如何支持  实施态部分元数据可以编辑，
+
+多租赁视图页地址：https://demo3-cloud.italent.link/#/indexPage?metaObjName=OldAppForSteppe1.zhytestB&navType=1&navCode=09ef1d95-75f2-4d0a-819f-cc37d0a6fa29&_k=qdosdfs
+
+https://cloud.italent.link/PageHome/Index?product=ISVTestTK204&keyName=Nusion&nusionDatasource=Page&pageInstanceId=a073cd3d-1b3d-483b-a611-017c5620821b&bc_sign=507a253c8c39d8ccd6772f43c0c686a5bdc9b075&bc_ts=1611735873834&bc_nonce=ck31Zv&shadow_context=%7BlocalApp%3A%27ISVTestTK204%27%2CtenantID%3A%270%27%7D#/viewDynamic?t=t&preview=true&shadow_context={localApp:%27ISVTestTK204%27,tenantID:%270%27}
+
+权限：
+三个方向思考
+1.组件的应用级别权限控制
+2.实体体系下的权限控制
+3.业务模型自身的开发态、实施态控制逻辑
+
+3.1 
+组配的元数据控制，https://wiki.beisen-inc.com/pages/viewpage.action?pageId=228327914
+核心思路是数据库全局的Check表，多个字段定位到元素，前端渲染的时候直接过滤、置灰定位的区域，部分数据有后端check，因为层级太深，代码侵入性太强
+鲁班的解决方案：
+1.组件内部自己控制，jsonPath, 但是引擎是主子表的处理方式

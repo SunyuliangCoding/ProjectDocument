@@ -1,0 +1,91 @@
+MultiDeployUML
+@startuml MultiDeploy
+
+
+AbsCommonEntityDeploy<|..IDeployService
+AbsCommonEntityDeploy<|--EntityDeployHandler
+
+MainEntityConfig<|--BaseEntityConfig
+RelationEntityConfig<|--BaseEntityConfig
+
+
+AbsCommonEntityDeploy*--MainEntityConfig:1
+AbsCommonEntityDeploy*-- RelationEntityConfig:0..*
+
+
+
+
+ProfilePriority<|..IDeployService
+ProfileDeployProvider<|--AbsCommonEntityDeploy
+MenuGroupDeployProvider<|--AbsCommonEntityDeploy
+
+
+
+EntityDeployHandler<|..IEntityDeploy
+
+
+
+abstract Class AbsCommonEntityDeploy{
++MainEntityConfig
++List<RelationEntityConfig>
++abstract InitConfig()
+
+}
+
+Class EntityDeployModel{
++List<BaseEntityConfig> configList
++List<List<ObjectData>> Data
+}
+
+
+
+Class BaseEntityConfig{
++String MetaObjectFullName
++Dictionary<string,string> FieldMaping
++bool IdAndCodeCheck
++int SysTenantId
++int Sort
+
+}
+
+
+Class RelationEntityConfig{
++Dictionary<string,string> RelationMapping
++List<ObjectData> FilterAction()
+}
+
+
+Class MainEntityConfig{
++String PackageModelPropertyName
++Bool IsDeleteCheck
+}
+
+Class ProfileDeployProvider{
+}
+Class MenuGroupDeployProvider{
+}
+Class ProfilePriority{}
+
+Class EntityDeployHandler{
+
+}
+Interface IEntityDeploy{
++Search()
++Mapping()
++GetMainEntityData()
++GetRelationData()
++Sort()
++Check()
++InsertOrUpdate()
+}
+
+
+Interface IDeployService{
++SearchDeployList()
++RefreshDeployList()
++DoSyncPackage()
++Validate()
++SyncBackupPackage()
++SyncDeployPackage()
+}
+@enduml
